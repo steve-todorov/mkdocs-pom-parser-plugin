@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 from typing import Dict
 
+import jinja2
 import mkdocs
-from jinja2 import Template
 from mkdocs.config import Config
 from mkdocs.plugins import BasePlugin
 
@@ -80,7 +80,13 @@ class PomParserPlugin(BasePlugin):
 
         return config
 
-    def on_page_markdown(self, markdown, page, config, files):
-        log.debug("on_page_markdown[POM_ENV_VARS: %s]", config.get("pom_env_vars"))
-        md_template = Template(markdown)
+    def on_page_markdown(self, markdown, config, **kwargs):
+        log.debug("pom on_page_markdown[POM_ENV_VARS: %s]", config.get("pom_env_vars"))
+        # log.debug("pom on_page_markdown[markdown: %s]", markdown)
+        # Do not use Template because it will remove all unknown template variables and break the chain
+        # if there are other plugins hooked to on_page_markdown event.
+        # https://stackoverflow.com/questions/20120957/jinja-leave-template-tags-after-render
+        # md_template = Template(markdown)
+        env = jinja2.Environment(undefined=jinja2.DebugUndefined)
+        md_template = env.from_string(markdown)
         return md_template.render(copy.copy(config.get("pom_env_vars")))
