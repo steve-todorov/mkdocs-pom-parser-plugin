@@ -1,15 +1,12 @@
-import sys
-
-import mkdocs
 import logging
-from mkdocs.plugins import BasePlugin
-from mkdocs.utils import warning_filter
+import sys
+import mkdocs
 
 from typing import Dict
-
-from jinja2 import Template, Environment
-
-from plugin.parser import PomParser
+from jinja2 import Template
+from mkdocs.plugins import BasePlugin
+from mkdocs.utils import warning_filter
+from mkdocs_pom_parser_plugin.parser import PomParser
 
 log = logging.getLogger(__name__)
 log.addFilter(warning_filter)

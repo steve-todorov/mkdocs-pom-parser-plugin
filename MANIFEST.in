@@ -6,7 +6,7 @@ include *.md
 # Include the license file
 include LICENSE.txt
 
-include *.nix
+recursive-include src/mkdocs_pom_parser_plugin *.py
 
 exclude build.sh
 exclude create-release.sh

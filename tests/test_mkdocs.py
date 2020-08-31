@@ -1,3 +1,5 @@
+import pathlib
+
 import yaml
 import tempfile
 import unittest
@@ -6,7 +8,7 @@ from pathlib import Path
 from click.testing import CliRunner
 from mkdocs.__main__ import build_command
 
-mkdocsConfigFile = 'tests/resources/mkdocs.yml'
+mkdocsConfigFile = pathlib.Path(__file__).parent.absolute().joinpath('resources/mkdocs.yml').resolve()
 config = yaml.load(open(mkdocsConfigFile, 'rb'), Loader=yaml.Loader)
 
 class TestWithMkDocs(unittest.TestCase):

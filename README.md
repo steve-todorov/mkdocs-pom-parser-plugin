@@ -61,6 +61,7 @@ plugins:
 
 1. Run `./build.sh` or 
 2. `docker-compose up` and check `localhost:8000`
+3. Install locally: `pip install --user . && mkdocs build --config-file tests/resources/mkdocs.yml`
 
 ## Release
 
