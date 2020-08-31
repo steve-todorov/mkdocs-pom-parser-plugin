@@ -1,7 +1,8 @@
+import http.client
 import pathlib
 import unittest
+from html import escape
 from pathlib import Path
-import http.client
 
 
 class TestMkDocsBase(unittest.TestCase):
@@ -26,6 +27,9 @@ class TestMkDocsBase(unittest.TestCase):
         self.assertTrue('POM_DESCRIPTION=Some description' in contents)
         self.assertTrue('POM_URL=https://github.com' in contents)
         self.assertTrue('POM_SCM_CONNECTION=scm:git:git://github.com' in contents)
+        self.assertTrue(escape('<groupId>org.example</groupId>') in contents)
+        self.assertTrue(escape('<artifactId>mkdocs-pom-parser-plugin</artifactId>') in contents)
+        self.assertTrue(escape('<version>1.0.0-SNAPSHOT</version>') in contents)
 
     def assertHttpContent(self, route: str):
         page_name = route.split("/")[-1]
@@ -34,7 +38,7 @@ class TestMkDocsBase(unittest.TestCase):
         client = http.client.HTTPConnection(self.host + ':' + self.port)
         client.request("GET", route)
         response = client.getresponse()
-        print(self.host + ':' + self.port + '/' + route.lstrip("/"), response.status, response.reason)
+        print(response.status, response.reason)
 
         self.assertEqual(response.status, 200, "Should have found page " + self.host + ':' + self.port + '/' + route.lstrip("/"))
 
@@ -52,6 +56,9 @@ class TestMkDocsBase(unittest.TestCase):
         self.assertTrue('POM_DESCRIPTION=Some description' in contents)
         self.assertTrue('POM_URL=https://github.com' in contents)
         self.assertTrue('POM_SCM_CONNECTION=scm:git:git://github.com' in contents)
+        self.assertTrue(escape('<groupId>org.example</groupId>') in contents)
+        self.assertTrue(escape('<artifactId>mkdocs-pom-parser-plugin</artifactId>') in contents)
+        self.assertTrue(escape('<version>1.0.0-SNAPSHOT</version>') in contents)
 
 
 if __name__ == '__main__':
