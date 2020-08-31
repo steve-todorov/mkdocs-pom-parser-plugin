@@ -34,7 +34,7 @@ By default, the plugin will export all of the commonly used tags as template env
 | `project.description`          | `POM_DESCRIPTION`     |
 | `project.url`                  | `POM_URL`             |
 
-In your `.md` files you can reference to generate a `dependency installation` section in your documentation:
+In your `.md` files you can reference these variables to generate a `dependency installation` section in your documentation:
 
 ```
     <dependency>

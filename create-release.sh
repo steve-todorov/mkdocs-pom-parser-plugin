@@ -25,9 +25,9 @@ git tag "$VERSION"
 echo $REMOTE
 
 while true; do
-  read -p "Push? [N|y]" PUSH
+  read -p "Push? [y|n]" PUSH
   case $PUSH in
-    [Yy]* ) git push -u origin --all && push -u origin --tags; break;;
+    [Yy]* ) git push -u origin --all && git push -u origin --tags; break;;
     [Nn]* ) exit;;
     * ) echo "Please answer yes or no.";;
   esac
