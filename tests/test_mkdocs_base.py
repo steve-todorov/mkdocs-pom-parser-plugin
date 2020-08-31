@@ -1,11 +1,16 @@
+import pathlib
 import unittest
 from pathlib import Path
 import http.client
 
 
-class TestMkDocsBase(unittest.IsolatedAsyncioTestCase):
+class TestMkDocsBase(unittest.TestCase):
     host = '0.0.0.0'
     port = '18001'
+
+    mkdocsBasePath = pathlib.Path(__file__).parent.absolute().joinpath("resources")
+    mkdocsConfigFile = mkdocsBasePath.joinpath('mkdocs.yml').resolve()
+    mkdocsSiteDir = mkdocsBasePath.joinpath('site')
 
     def assertFileContent(self, page: Path):
         self.assertTrue(page.exists(), "{page} does not exist, it should")

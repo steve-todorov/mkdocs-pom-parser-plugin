@@ -4,7 +4,7 @@ use_directory_urls: true
 plugins:
     - search
     - mkdocs-pom-parser-plugin:
-        path: tests/resources/pom.xml
+        path: pom.xml
         debug: true
         additional:
           SCM_CONNECTION: ./scm/connection
