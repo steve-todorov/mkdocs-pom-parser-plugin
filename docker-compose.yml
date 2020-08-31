@@ -1,0 +1,11 @@
+version: '3'
+services:
+  mkdocs-pom-parser-plugin:
+    image: python:3.8
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    entrypoint: /bin/sh
+    command: [ "-c", "set -x && pwd && ls -al && pip3 install tox &&./build.sh && python3 -m http.server 8000 --directory tests/resources/site/"]
+    ports:
+      - 8000:8000
