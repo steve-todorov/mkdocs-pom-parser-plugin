@@ -9,4 +9,5 @@ include LICENSE.txt
 include *.nix
 
 exclude build.sh
+exclude create-release.sh
 exclude docker-compose.yml
