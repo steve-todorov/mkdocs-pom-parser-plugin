@@ -1,4 +1,4 @@
-# Hello Pom File
+# index.html
 
 POM_MODEL_VERSION={{ POM_MODEL_VERSION }}  
 POM_GROUP_ID={{ POM_GROUP_ID }}  

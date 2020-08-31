@@ -55,4 +55,5 @@ class PomParser:
 
     def findTextByXpath(self, xpath: str):
         element = self.tree.find(xpath, namespaces)
+        # print(element.text) if element is not None else None
         return element.text if element is not None else None
