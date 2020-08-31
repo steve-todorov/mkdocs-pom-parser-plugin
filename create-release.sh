@@ -18,14 +18,16 @@ sed -i "s/version='.*',/version='$VERSION',/" setup.py
 
 ./build.sh
 
+git add setup.py
+git commit -m "Releasing $VERSION"
 git tag "$VERSION"
 
 echo $REMOTE
 
 while true; do
   read -p "Push? [N|y]" PUSH
-  case $yn in
-    [Yy]* ) git push -u origin --all; break;;
+  case $PUSH in
+    [Yy]* ) git push -u origin --all && push -u origin --tags; break;;
     [Nn]* ) exit;;
     * ) echo "Please answer yes or no.";;
   esac
