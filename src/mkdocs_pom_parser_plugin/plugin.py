@@ -43,6 +43,12 @@ class PomParserPlugin(BasePlugin):
     }
 
     def on_config(self, config: Config):
+        oldPython = sys.version_info < (3, 8)
+
+        if oldPython:
+            log.warning("Python versions lower than 3.8 (current: %s) do not support default namespace! ", str(sys.version_info.major) + "." + str(sys.version_info.minor))
+            log.warning("None results while referencing POM_* variables in templates are likely because of that.")
+
         env_vars = {}
         for name, plugin in config.get('plugins').items():
             if name == 'mkdocs-pom-parser-plugin':
@@ -92,4 +98,4 @@ class PomParserPlugin(BasePlugin):
         # md_template = Template(markdown)
         env = jinja2.Environment(undefined=jinja2.DebugUndefined)
         md_template = env.from_string(markdown)
-        return md_template.render(copy.copy(config.get("pom_env_vars")))
+        return md_template.render(copy.deepcopy(config.get("pom_env_vars")))
