@@ -56,21 +56,24 @@ class PomParserPlugin(BasePlugin):
                 path = plugin_config.get('path')
                 if path is not None:
                     log.debug("Configured pom file: %s", path)
-                    path = Path(path).resolve().__str__()
+                    path = Path(path).resolve()
                     log.info("Resolved pom file: %s", path)
 
-                    additional = plugin_config.get('additional', {})
-                    env_vars = copy.copy(self.DEFAULT_ENV_VARS)
+                    if path.exists():
+                        additional = plugin_config.get('additional', {})
+                        env_vars = copy.copy(self.DEFAULT_ENV_VARS)
 
-                    if additional is not None:
-                        log.debug("Additional pom variables detected: %s", additional)
-                        for key, value in additional.items():
-                            env_vars["POM_" + key.upper()] = value
+                        if additional is not None:
+                            log.debug("Additional pom variables detected: %s", additional)
+                            for key, value in additional.items():
+                                env_vars["POM_" + key.upper()] = value
 
-                    parser = PomParser(path)
-                    for key, xpath in env_vars.items():
-                        value = parser.findTextByXpath(xpath)
-                        env_vars[key] = value
+                        parser = PomParser(path.__str__())
+                        for key, xpath in env_vars.items():
+                            value = parser.findTextByXpath(xpath)
+                            env_vars[key] = value
+                    else:
+                        log.warning("File %s does not exist or is not readable/accessible!", path)
 
         config.update({"pom_env_vars": env_vars})
         if env_vars.__sizeof__() > 0:
