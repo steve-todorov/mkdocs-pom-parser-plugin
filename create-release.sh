@@ -23,7 +23,7 @@ git commit -m "Releasing $VERSION"
 git tag "$VERSION"
 
 while true; do
-  read -p "Next developer version: " NEXT_VERSION
+  read -p "Next developer version (will auto append .dev1 to version): " NEXT_VERSION
   if [ -z "${RELEASED_VERSIONS##*NEXT_VERSION*}" ]; then
     echo "This version has already been released! Pick another one";
   else
@@ -42,7 +42,7 @@ echo $REMOTE
 while true; do
   read -p "Push? [y|n] " PUSH
   case $PUSH in
-    [Yy]* ) git push -u origin --all && git push -u origin --tags; break;;
+    [Yy]* ) git push -u origin && git push -u origin --tags; break;;
     [Nn]* ) exit;;
     * ) echo "Please answer yes or no.";;
   esac
