@@ -1,7 +1,6 @@
 # the inclusion of the tests module is not meant to offer best practices for
 # testing in general, but rather to support the `find_packages` example in
 # setup.py that excludes installing the "tests" package
-
 import unittest
 
 from mkdocs_pom_parser_plugin.parser import PomParser
@@ -67,6 +66,18 @@ class TestPomParser(unittest.TestCase):
 
     def test_findTextByXpathDeep(self):
         element = PomParser(self.stringXml).findTextByXpath("./scm/connection")
+        self.assertIsNotNone(element)
+        self.assertEqual('scm:git:git://github.com', element)
+
+    def test_findByXpathOlderPythonVersions(self):
+        version = (3, 7, 0, 'final', 0)
+        element = PomParser(self.stringXml, version_info=version).findTextByXpath("./scm/connection")
+        self.assertIsNotNone(element)
+        self.assertEqual('scm:git:git://github.com', element)
+
+    def test_findByXpathOlderPythonVersionsWithExplicitNamespace(self):
+        version = (3, 7, 0, 'final', 0)
+        element = PomParser(self.stringXml, version_info=version).findTextByXpath("./{http://maven.apache.org/POM/4.0.0}scm/connection")
         self.assertIsNotNone(element)
         self.assertEqual('scm:git:git://github.com', element)
 

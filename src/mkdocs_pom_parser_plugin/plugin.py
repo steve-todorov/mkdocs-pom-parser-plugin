@@ -43,6 +43,12 @@ class PomParserPlugin(BasePlugin):
     }
 
     def on_config(self, config: Config):
+        oldPython = sys.version_info < (3, 8)
+
+        if oldPython:
+            log.warning("Python versions lower than 3.8 (current: %s) do not support default namespace! ", str(sys.version_info.major) + "." + str(sys.version_info.minor))
+            log.warning("None results while referencing POM_* variables in templates are likely because of that.")
+
         env_vars = {}
         for name, plugin in config.get('plugins').items():
             if name == 'mkdocs-pom-parser-plugin':
@@ -56,21 +62,24 @@ class PomParserPlugin(BasePlugin):
                 path = plugin_config.get('path')
                 if path is not None:
                     log.debug("Configured pom file: %s", path)
-                    path = Path(path).resolve().__str__()
+                    path = Path(path).resolve()
                     log.info("Resolved pom file: %s", path)
 
-                    additional = plugin_config.get('additional', {})
-                    env_vars = copy.copy(self.DEFAULT_ENV_VARS)
+                    if path.exists():
+                        additional = plugin_config.get('additional', {})
+                        env_vars = copy.copy(self.DEFAULT_ENV_VARS)
 
-                    if additional is not None:
-                        log.debug("Additional pom variables detected: %s", additional)
-                        for key, value in additional.items():
-                            env_vars["POM_" + key.upper()] = value
+                        if additional is not None:
+                            log.debug("Additional pom variables detected: %s", additional)
+                            for key, value in additional.items():
+                                env_vars["POM_" + key.upper()] = value
 
-                    parser = PomParser(path)
-                    for key, xpath in env_vars.items():
-                        value = parser.findTextByXpath(xpath)
-                        env_vars[key] = value
+                        parser = PomParser(path.__str__())
+                        for key, xpath in env_vars.items():
+                            value = parser.findTextByXpath(xpath)
+                            env_vars[key] = value
+                    else:
+                        log.warning("File %s does not exist or is not readable/accessible!", path)
 
         config.update({"pom_env_vars": env_vars})
         if env_vars.__sizeof__() > 0:
@@ -89,4 +98,4 @@ class PomParserPlugin(BasePlugin):
         # md_template = Template(markdown)
         env = jinja2.Environment(undefined=jinja2.DebugUndefined)
         md_template = env.from_string(markdown)
-        return md_template.render(copy.copy(config.get("pom_env_vars")))
+        return md_template.render(copy.deepcopy(config.get("pom_env_vars")))
